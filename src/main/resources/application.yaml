@@ -2,19 +2,19 @@ spring:
   application:
     name: basket-service
 
-    data:
-      mongodb:
-        host: localhost
-        port: 27017
-        database: basket_service
-      redis:
-        host: localhost
-        port: 6379
-        password: ${DATABASE_PASSWORD}
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: basket_service
+    redis:
+      host: localhost
+      port: 6379
+      password: ${DATABASE_PASSWORD}
 
-    cache:
-      redis:
-        time-to-live: 60000
+  cache:
+    redis:
+      time-to-live: 60000
 
 basket:
   client:
