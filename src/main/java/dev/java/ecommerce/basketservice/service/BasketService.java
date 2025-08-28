@@ -2,6 +2,7 @@ package dev.java.ecommerce.basketservice.service;
 
 import dev.java.ecommerce.basketservice.client.response.PlatziProductResponse;
 import dev.java.ecommerce.basketservice.controller.request.BasketRequest;
+import dev.java.ecommerce.basketservice.controller.request.PaymentRequest;
 import dev.java.ecommerce.basketservice.entity.Basket;
 import dev.java.ecommerce.basketservice.entity.Product;
 import dev.java.ecommerce.basketservice.enums.Status;
@@ -43,8 +44,6 @@ public class BasketService {
                     .build());
         });
 
-
-
         Basket basket = Basket.builder()
                 .clientId(request.clientId())
                 .status(Status.OPEN)
@@ -54,7 +53,6 @@ public class BasketService {
         basket.calculateTotalPrice();
 
         return repository.save(basket);
-
     }
 
     public Basket getBasketById(String id){
@@ -65,5 +63,44 @@ public class BasketService {
 
     }
 
+    public Basket update(String id, BasketRequest request){
+        Basket savedBasket = getBasketById(id);
+
+        List<Product> products = new ArrayList<>();
+        request.products().forEach(productRequest -> {
+            PlatziProductResponse platziProductResponse = productService.getProductById(productRequest.id());
+
+            products.add(Product.builder()
+                        .id(platziProductResponse.id())
+                        .title(platziProductResponse.title())
+                        .price(platziProductResponse.price())
+                        .description(platziProductResponse.description())
+                        .quantity(productRequest.quantity())
+                        .build());
+
+                });
+
+
+            savedBasket = Basket.builder()
+                            .id(id)
+                            .status(Status.OPEN)
+                            .clientId(request.clientId())
+                            .products(products)
+                            .build();
+
+            savedBasket.calculateTotalPrice();
+            return repository.save(savedBasket);
+
+    }
+
+    public Basket payBasket(String id, PaymentRequest request){
+
+
+        Basket savedBasket = getBasketById(id);
+        savedBasket.setPaymentMethod(request.paymentMethod());
+        savedBasket.setStatus(Status.SOLD);
+        return repository.save(savedBasket);
+
+    }
 
 }

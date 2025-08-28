@@ -1,5 +1,7 @@
 package dev.java.ecommerce.basketservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.java.ecommerce.basketservice.enums.PaymentMethod;
 import dev.java.ecommerce.basketservice.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,9 @@ public class Basket {
     private BigDecimal totalPrice;
     private List<Product> products;
     private Status status;
+    // Só irá incluir no corpo do response se esse valor não for nulo, ou seja, se o usuário colocar esse valor na requisição ele aparecerá no retorno, caso contrário não aparecerá
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private PaymentMethod paymentMethod;
 
 
     public String getId() {
@@ -64,6 +69,14 @@ public class Basket {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public void calculateTotalPrice(){
