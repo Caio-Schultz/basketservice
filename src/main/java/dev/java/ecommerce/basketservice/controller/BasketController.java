@@ -67,4 +67,18 @@ public class BasketController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id){
+        Basket basket = service.getBasketById(id);
+
+        if (basket != null) {
+            service.delete(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
 }

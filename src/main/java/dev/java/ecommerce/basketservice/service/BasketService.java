@@ -103,4 +103,8 @@ public class BasketService {
 
     }
 
+    public void delete(String id){
+        repository.deleteById(id);
+    }
+
 }
